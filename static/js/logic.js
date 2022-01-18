@@ -3,7 +3,7 @@ console.log("working");
 
 // Create the map object with a center and zoom level
 // from the Leaflet Quick Start Guide page, change the gergraphical center of the map to the US
-let map = L.map('mapid').setView([34.0522,-118.2437],14);
+let map = L.map('mapid').setView([34.0522,-118.2437],4);
 // above: 'mapid' will reference the id tag in our <div> element on the index.html file
 // setView() method sets the view of the map with a geographical center
 // where the latitude is 40.7 and longitude  -94.5
@@ -49,23 +49,52 @@ streets.addTo(map);
 // above: we call the addTo() function with our map object, map on our graymap object tile layer
 // the addTo() function will add the graymap object tile layer to our let map
 
-// Add a Marker to the Map
+// ******************************** Add a Marker to the Map
 // from the Leaflet Quick Start Guide under the "Markers, circles and polygons"
 // add a marker to the map for Los Angeles,CA
 
 // let marker = L.marker([34.0522, -118.2437]).addTo(map);
 
 
-// Add a circle to the map
+//********************************* */ Add a circle to the map
 
 //L.circle([34.0522,-118.2437], {
   //  radius:100
 // }).addTo(map);
 
 // alternative function to make a circle
-L.circleMarker([34.0522, -118.2437],{
-    radius :300,
-    color: "black", // the circle edge
-    fillColor :'#ffffa1' // the color inside the circle
-}).addTo(map);
+//L.circleMarker([34.0522, -118.2437],{
+  //  radius :300,
+    //color: "black", // the circle edge
+    //fillColor :'#ffffa1' // the color inside the circle
+//}).addTo(map);
 
+//********************************** */
+// Add multiple markers
+
+// to add multiple markers, we have to iterate through the array and add each latitude and longitude to the map
+// An array containing each city's location, state, and population.
+
+// Get data from cities.js
+let cityData = cities;
+
+  // Loop through the cities array and create one marker for each city
+  //cityData.forEach(function(city) {
+    //  console.log(city)
+    //  L.marker(city.location)
+      // we use bindPopup() method to show data of each cities on the map
+    //  .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
+    //  .addTo(map);  
+    //});
+
+// **************************
+// use the radius circle to represent the population for each city
+cityData.forEach(function(city) {
+      console.log(city)
+      L.circleMarker(city.location,{
+          radius: city.population/100000
+      })
+      //we use bindPopup() method to show data of each cities on the map
+      .bindPopup("<h2>" + city.city + ", " + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
+      .addTo(map);  
+    });
