@@ -242,28 +242,28 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 // Mapping GeoJSON LineStrings
 // ******************************
 
-// Accessing the Toronto airline routes GeoJSON URL.
-let torontoData = "https://raw.githubusercontent.com/weizhou77/Mapping_Earthquakes./main/torontoRoutes.json";
+// // Accessing the Toronto airline routes GeoJSON URL.
+// let torontoData = "https://raw.githubusercontent.com/weizhou77/Mapping_Earthquakes./main/torontoRoutes.json";
 
-// Grabbing our GeoJSON data.
-d3.json(torontoData).then(function(data) {
-  console.log(data);
+// // Grabbing our GeoJSON data.
+// d3.json(torontoData).then(function(data) {
+//   console.log(data);
 
-// Create a style for the lines
-let myStyle  = {
-  color: "#ffffa1",
-  weight:2 // thickness of the linestring?
-};
+// // Create a style for the lines
+// let myStyle  = {
+//   color: "#ffffa1",
+//   weight:2 // thickness of the linestring?
+// };
 
-// Creating a GeoJSON layer with the retrieved data.
-L.geoJSON(data, {
-  style:myStyle,
-  onEachFeature : function(feature, layer) {
-    layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
-    + feature.properties.dst + "</h3>");
-  }
-}).addTo(map);
-});
+// // Creating a GeoJSON layer with the retrieved data.
+// L.geoJSON(data, {
+//   style:myStyle,
+//   onEachFeature : function(feature, layer) {
+//     layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
+//     + feature.properties.dst + "</h3>");
+//   }
+// }).addTo(map);
+// });
 
 let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {    
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -274,16 +274,61 @@ let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/
     accessToken: API_KEY
 });
 
-let baseMaps = {
-  Light: light,
-  Dark : dark
-};
+// let baseMaps = {
+//   Light: light,
+//   Dark : dark
+// };
 
 
-let map = L.map('mapid', {
-  center : [44.0,-80.0],
-  zoom:2,
-  layers:[light]
+// let map = L.map('mapid', {
+//   center : [44.0,-80.0],
+//   zoom:2,
+//   layers:[light]
+// });
+
+// L.control.layers(baseMaps).addTo(map);
+
+
+//************************** */
+// Mapping GeoJSON Polygon
+//**************************
+
+// Accessing the Toronto neighborhoods GeoJSON URL.
+let torontoHoods = "https://raw.githubusercontent.com/weizhou77/Mapping_Earthquakes./main/torontoNeighborhoods.json";
+
+// Grabbing our GeoJSON data
+d3.json(torontoHoods).then(function(data) {
+  console.log(data);
+  //Creating a GeoJSON layer with the retrieved data
+  L.geoJSON(data, {
+    onEachFeature : function(feature, layer) {
+      layer.bindPopup("<h3> Neighborhood: "+ feature.properties.AREA_NAME + "</h3>")
+    }
+  }).addTo(map);
 });
 
+let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {    
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'satellite-streets-v11',
+    //tileSize: 512,
+    //zoomOffset: -1,
+    accessToken: API_KEY
+});
+
+
+//Create a base layer that holds both maps
+let baseMaps ={
+  "Streets" : streets,
+  "Satellite Streets" : satelliteStreets
+};
+
+// Create a map object with the center, zoom level and default layer
+let map = L.map('mapid', {
+  center :[43.7,-79.3],
+  zoom:11,
+  layers:[satelliteStreets]
+});
+
+// Pass out map layers into our layer control and add the layer control to the map
 L.control.layers(baseMaps).addTo(map);
